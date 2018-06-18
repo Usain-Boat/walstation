@@ -23,6 +23,7 @@ class UsainNetworkMessage
     GET,
     POST,
     RESP,
+    BCST,
     ERR
   } message_type_t;
 

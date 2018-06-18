@@ -18,7 +18,7 @@ public:
 
     void send(const UsainNetworkMessage &message);
 
-    void register_message_received(const Callback<void(const UsainNetworkMessage &, UsainNetwork *network)> &callback);
+    void register_message_received(const Callback<void(const UsainNetworkMessage &msg, UsainNetwork *network)> &callback);
 
     void register_message_send(const Callback<void()> &callback);
 
@@ -27,7 +27,7 @@ private:
     radio_events_t events;
 
     int                                         n_rx_callbacks;
-    Callback<void(const UsainNetworkMessage &, UsainNetwork *network)> _rx_callbacks[32];
+    Callback<void(const UsainNetworkMessage &msg, UsainNetwork *network)> _rx_callbacks[32];
 
     int              n_tx_callbacks;
     Callback<void()> _tx_callbacks[32];
