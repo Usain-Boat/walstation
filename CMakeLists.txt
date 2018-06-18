@@ -1062,7 +1062,6 @@ ADD_EXECUTABLE(walstation
         src/usain_network.h
         src/usain_network_message.cpp
         src/usain_network_message.h
-        src/walstation.cpp
         )
 SET_TARGET_PROPERTIES(walstation PROPERTIES ENABLE_EXPORTS 1)
 # add syslibs dependencies to create the correct linker order
