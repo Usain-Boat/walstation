@@ -1,6 +1,7 @@
 #include "mbed.h"
 #include "usain_network.h"
 
+DigitalOut led1(LED1);
 DigitalOut led(LED2);
 RawSerial pc(USBTX, USBRX); // tx, rx
 
@@ -11,6 +12,7 @@ void tx_handler()
 
 void rx_handler(const UsainNetworkMessage &message, UsainNetwork *network)
 {
+  led1 = !led1;
   char send_buffer[255] = "";
   char number[6] = "";
 
@@ -66,6 +68,7 @@ int main()
   char buffer[255];
   int index = 0;
 
+  printf("test\n");
   if (!network->init())
   {
     error("error: no radio connected\n");
@@ -88,8 +91,11 @@ int main()
         UsainNetworkMessage to_send;
         char *pch;
         int message_token = 0;
+        char tmp[246];
 
-        pch = strtok(buffer, " ");
+        strcpy(tmp, buffer);
+
+        pch = strtok(tmp, " ");
 
         if (strcmp(pch, "GET") == 0)
         {
@@ -107,6 +113,8 @@ int main()
         while (pch != NULL)
         {
           pch = strtok(NULL, " ");
+
+          if(strlen(pch) == 0) break;
 
           switch (message_token++)
           {
@@ -126,9 +134,9 @@ int main()
               // size
               break;
 
-            case 5:
+            default:
               // data
-              to_send.set_data(reinterpret_cast<uint8_t *>(pch), strlen(pch));
+              to_send.add_parameter(pch);
               break;
           }
         }

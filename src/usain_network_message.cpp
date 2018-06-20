@@ -7,6 +7,7 @@
 
 UsainNetworkMessage::UsainNetworkMessage()
 {
+  _current_message.data_size = 0;
   memset(_current_message.data, 0, 246);
 }
 
@@ -83,44 +84,47 @@ uint8_t UsainNetworkMessage::to_byte_array(uint8_t *dst) const
   return total_size;
 }
 
-void UsainNetworkMessage::add_parameter(char *name)
+void UsainNetworkMessage::add_parameter(const char *name)
 {
+  if(_current_message.data_size != 0) strcat(reinterpret_cast<char *>(_current_message.data), " ");
   strcat(reinterpret_cast<char *>(_current_message.data), name);
   _current_message.data_size = strlen(reinterpret_cast<const char *>(_current_message.data));
 }
 
-void UsainNetworkMessage::add_parameter(char *name, char *value)
+void UsainNetworkMessage::add_parameter(const char *name, char *value)
 {
+  if(_current_message.data_size != 0) strcat(reinterpret_cast<char *>(_current_message.data), " ");
   strcat(reinterpret_cast<char *>(_current_message.data), name);
   strcat(reinterpret_cast<char *>(_current_message.data), "=");
   strcat(reinterpret_cast<char *>(_current_message.data), value);
-  strcat(reinterpret_cast<char *>(_current_message.data), " ");
 
   _current_message.data_size = strlen(reinterpret_cast<const char *>(_current_message.data));
 }
 
-void UsainNetworkMessage::add_parameter(char *name, int value)
+void UsainNetworkMessage::add_parameter(const char *name, int value)
 {
   char buffer[12];
-  sprintf(buffer, "%d", value);
+  snprintf(buffer, 12, "%d", value);
   add_parameter(name, buffer);
 }
 
-void UsainNetworkMessage::add_parameter(char *name, float value)
+void UsainNetworkMessage::add_parameter(const char *name, float value)
 {
   char buffer[12];
-  sprintf(buffer, "%f", value);
+  snprintf(buffer, 12, "%f", value);
   add_parameter(name, buffer);
 }
 
-int UsainNetworkMessage::get_paramaters(UsainNetworkMessage::paramater_t *dest, uint8_t size)
+int UsainNetworkMessage::get_paramaters(UsainNetworkMessage::paramater_t *dest, uint8_t size) const
 {
-  char *str = reinterpret_cast<char *>(_current_message.data);
+  char tmp[246] = "";
   char *key_value;
   char *key_value_s;
   int i = 0;
 
-  key_value = strtok_r(str, " ", &key_value_s);
+  strcpy(tmp, const_cast<char*>(reinterpret_cast<const char *>(_current_message.data)));
+
+  key_value = strtok_r(tmp, " ", &key_value_s);
 
   while (key_value)
   {
@@ -129,8 +133,8 @@ int UsainNetworkMessage::get_paramaters(UsainNetworkMessage::paramater_t *dest, 
     key = strtok_r(key_value, "=", &s);
     value = strtok_r(NULL, "=", &s);
 
-    memcpy(dest[i].name, key, strlen(key));
-    memcpy(dest[i].value, value, strlen(value));
+    strcpy(dest[i].name, key);
+    strcpy(dest[i].value, value);
 
     key_value = strtok_r(NULL, ",", &key_value_s);
 
