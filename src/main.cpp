@@ -1,17 +1,18 @@
 #include "mbed.h"
 #include "usain_network.h"
 
+DigitalOut led(LED2);
 RawSerial pc(USBTX, USBRX); // tx, rx
 
 void tx_handler()
 {
-
+  led = !led;
 }
 
 void rx_handler(const UsainNetworkMessage &message, UsainNetwork *network)
 {
-  char send_buffer[255];
-  char number[6];
+  char send_buffer[255] = "";
+  char number[6] = "";
 
   switch (message.get_type())
   {
@@ -38,29 +39,29 @@ void rx_handler(const UsainNetworkMessage &message, UsainNetwork *network)
   // seq
   strcat(send_buffer, "0 ");
 
-  // source
+//  // source
   itoa(message.get_source(), number, 10);
   strcat(send_buffer, number);
   strcat(send_buffer, " ");
 
-  // dest
+//  // dest
   itoa(message.get_destination(), number, 10);
   strcat(send_buffer, number);
   strcat(send_buffer, " ");
 
-  // size
+//  // size
   itoa(message.get_data_size(), number, 10);
   strcat(send_buffer, number);
   strcat(send_buffer, " ");
 
   // data
   strcat(send_buffer, reinterpret_cast<const char *>(message.get_data()));
-  strcat(send_buffer, "\r");
+
+  printf("%s\r\n", send_buffer);
 }
 
 int main()
 {
-  DigitalOut led(LED2);
   UsainNetwork *network = new UsainNetwork();
   char buffer[255];
   int index = 0;
@@ -82,7 +83,6 @@ int main()
       if (buffer[index++] == '\r')
       {
         buffer[index - 1] = 0;
-        led = !led;
 
         // parse string
         UsainNetworkMessage to_send;
@@ -127,7 +127,6 @@ int main()
               break;
 
             case 5:
-              printf("data: %s\n", pch);
               // data
               to_send.set_data(reinterpret_cast<uint8_t *>(pch), strlen(pch));
               break;

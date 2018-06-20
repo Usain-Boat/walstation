@@ -7,7 +7,7 @@
 
 UsainNetworkMessage::UsainNetworkMessage()
 {
-
+  memset(_current_message.data, 0, 246);
 }
 
 UsainNetworkMessage::UsainNetworkMessage(uint8_t *src, uint8_t size)
