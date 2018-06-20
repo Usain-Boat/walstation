@@ -1,18 +1,18 @@
 #include "mbed.h"
 #include "usain_network.h"
 
-DigitalOut led1(LED1);
-DigitalOut led(LED2);
+//DigitalOut led1(LED1);
+//DigitalOut led(LED2);
 RawSerial pc(USBTX, USBRX); // tx, rx
 
 void tx_handler()
 {
-  led = !led;
+//  led = !led;
 }
 
 void rx_handler(const UsainNetworkMessage &message, UsainNetwork *network)
 {
-  led1 = !led1;
+//  led1 = !led1;
   char send_buffer[255] = "";
   char number[6] = "";
 
@@ -64,11 +64,11 @@ void rx_handler(const UsainNetworkMessage &message, UsainNetwork *network)
 
 int main()
 {
+  printf("testing\n");
   UsainNetwork *network = new UsainNetwork();
   char buffer[255];
   int index = 0;
 
-  printf("test\n");
   if (!network->init())
   {
     error("error: no radio connected\n");

@@ -9,11 +9,11 @@
 //SX1276_Radio UsainNetwork::_radio(PA_7, PA_6, PA_5, PD_14, PG_9, PF_12, PG_14, PF_15, PE_13, PF_14, PE_11);
 
 UsainNetwork::UsainNetwork() :
-    _radio(PA_7, PA_6, PA_5, PD_14, PG_9, PF_12, PG_14, PF_15, PE_13, PF_14, PE_11),
+    _radio(D11, D12, D13, D10, D0, D8, D1, NC, NC, NC, NC),
     n_rx_callbacks(0),
     n_tx_callbacks(0)
 {
-
+  printf("constructor\n");
 }
 
 bool UsainNetwork::init()
