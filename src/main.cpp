@@ -2,7 +2,7 @@
 #include "usain_network.h"
 
 //DigitalOut led1(LED1);
-//DigitalOut led(LED2);
+//DigitalOut led(LED3);
 RawSerial pc(USBTX, USBRX); // tx, rx
 
 void tx_handler()
@@ -62,20 +62,21 @@ void rx_handler(const UsainNetworkMessage &message, UsainNetwork *network)
   printf("%s\r\n", send_buffer);
 }
 
-int main()
+void main_thread()
 {
-  printf("testing\n");
-  UsainNetwork *network = new UsainNetwork();
+  printf("start\n");
+
+  UsainNetwork network;
   char buffer[255];
   int index = 0;
 
-  if (!network->init())
+  if (!network.init())
   {
     error("error: no radio connected\n");
   }
 
-  network->register_message_received(callback(rx_handler));
-  network->register_message_send(callback(tx_handler));
+  network.register_message_received(callback(rx_handler));
+  network.register_message_send(callback(tx_handler));
 
   while (true)
   {
@@ -141,7 +142,7 @@ int main()
           }
         }
 
-        network->send(to_send);
+        network.send(to_send);
 
         // reset string
         memset(buffer, 0, 255);
@@ -149,4 +150,13 @@ int main()
       }
     }
   }
+}
+
+int main()
+{
+  Thread t(osPriorityAboveNormal, 10000);
+
+  t.start(main_thread);
+
+  t.join();
 }

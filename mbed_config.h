@@ -45,7 +45,7 @@
 #define MBED_CONF_PLATFORM_STDIO_FLUSH_AT_EXIT            1                                                                                                // set by library:platform
 #define MBED_LFS_READ_SIZE                                64                                                                                               // set by library:littlefs
 #define MBED_CONF_PLATFORM_STDIO_BAUD_RATE                9600                                                                                             // set by library:platform
-#define CLOCK_SOURCE                                      USE_PLL_HSE_EXTC|USE_PLL_HSI                                                                     // set by target:NUCLEO_F446ZE
+#define CLOCK_SOURCE                                      USE_PLL_HSE_EXTC|USE_PLL_HSI                                                                     // set by target:NUCLEO_F446RE
 #define MBED_CONF_PLATFORM_STDIO_BUFFERED_SERIAL          0                                                                                                // set by library:platform
 #define MBED_CONF_LORA_NWKSKEY                            {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} // set by library:lora
 #define MBED_CONF_EVENTS_SHARED_HIGHPRIO_STACKSIZE        1024                                                                                             // set by library:events
