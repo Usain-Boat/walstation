@@ -3,7 +3,7 @@
 
 //DigitalOut led1(LED1);
 //DigitalOut led(LED3);
-RawSerial pc(USBTX, USBRX); // tx, rx
+RawSerial pc(USBTX, USBRX, 115200); // tx, rx
 
 void tx_handler()
 {
@@ -62,21 +62,21 @@ void rx_handler(const UsainNetworkMessage &message, UsainNetwork *network)
   printf("%s\r\n", send_buffer);
 }
 
-void main_thread()
+int main()
 {
   printf("start\n");
 
-  UsainNetwork network;
+  UsainNetwork *network = new UsainNetwork();
   char buffer[255];
   int index = 0;
 
-  if (!network.init())
+  if (!network->init())
   {
     error("error: no radio connected\n");
   }
 
-  network.register_message_received(callback(rx_handler));
-  network.register_message_send(callback(tx_handler));
+  network->register_message_received(callback(rx_handler));
+  network->register_message_send(callback(tx_handler));
 
   while (true)
   {
@@ -142,7 +142,7 @@ void main_thread()
           }
         }
 
-        network.send(to_send);
+        network->send(to_send);
 
         // reset string
         memset(buffer, 0, 255);
@@ -150,13 +150,4 @@ void main_thread()
       }
     }
   }
-}
-
-int main()
-{
-  Thread t(osPriorityAboveNormal, 10000);
-
-  t.start(main_thread);
-
-  t.join();
 }
